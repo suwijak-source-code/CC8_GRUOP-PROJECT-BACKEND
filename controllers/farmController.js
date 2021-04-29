@@ -23,6 +23,8 @@ exports.createFarm = async (req, res, next) => {
     //   return res.status(401).json({ message: "You are unauthorized" });
     if (!req.user) req.user = {}; // for test without user
     const { name, remark } = req.body;
+    if (!name && !name.trim())
+      return res.status(400).json({ message: "name is required" });
     const farm = await Farm.create({
       name,
       remark,
@@ -41,6 +43,8 @@ exports.editFarm = async (req, res, next) => {
     if (!req.user) req.user = {}; // for test without user
     const { id } = req.params;
     const { name, remark } = req.body;
+    if (!name && !name.trim())
+      return res.status(400).json({ message: "name is required" });
     const farm = await Farm.update(
       { name, remark, approvedBy: req.user.id },
       { where: { id } }

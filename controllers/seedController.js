@@ -23,6 +23,12 @@ exports.createSeed = async (req, res, next) => {
     //   return res.status(401).json({ message: "You are unauthorized" });
     if (!req.user) req.user = {}; // for test without user
     const { name, cost, remark } = req.body;
+    if (!name && !name.trim())
+      return res.status(400).json({ message: "name is required" });
+    if (!+cost || +cost < 0)
+      return res
+        .status(400)
+        .json({ message: "cost must be numeric and not less than zero" });
     const seed = await Seed.create({
       name,
       cost,
@@ -41,6 +47,12 @@ exports.editSeed = async (req, res, next) => {
     if (!req.user) req.user = {}; // for test without user
     const { id } = req.params;
     const { name, cost, remark } = req.body;
+    if (!name && !name.trim())
+      return res.status(400).json({ message: "name is required" });
+    if (!+cost || +cost < 0)
+      return res
+        .status(400)
+        .json({ message: "cost must be numeric and not less than zero" });
     const seed = await Seed.update(
       {
         name,
