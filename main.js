@@ -3,12 +3,17 @@ const express = require("express");
 const cors = require("cors");
 const middleware = require("./middlewares/error");
 const { sequelize } = require("./models");
+const farmRoute = require("./routes/farmRoute");
+const seedRoute = require("./routes/seedRoute");
 
 const main = express();
 main.use(express.json());
 main.use(express.urlencoded({ extended: false }));
 
 main.use(cors());
+
+main.use("/farm", farmRoute);
+main.use("/seed", seedRoute);
 
 main.use((req, res, next) => {
   res.status(404).json({
@@ -19,7 +24,7 @@ main.use((req, res, next) => {
 
 main.use(middleware);
 
-// sequelize.sync({ alter: true });
+// sequelize.sync({ force: true });
 
 const port = process.env.PORT || 8000;
 main.listen(port, () =>
