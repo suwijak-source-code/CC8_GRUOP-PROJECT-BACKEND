@@ -3,12 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const middleware = require("./middlewares/error");
 const { sequelize } = require("./models");
+const customerRoute = require("./routes/customerRoute");
 
 const main = express();
 main.use(express.json());
 main.use(express.urlencoded({ extended: false }));
 
 main.use(cors());
+main.use("/customer", customerRoute);
 
 main.use((req, res, next) => {
   res.status(404).json({
