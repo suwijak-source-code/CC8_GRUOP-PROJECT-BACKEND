@@ -34,14 +34,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      nationalId: DataTypes.STRING,
-      email: DataTypes.STRING,
-      address: DataTypes.STRING,
-      phone: DataTypes.STRING,
+      nationalId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       startDate: {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      endDate: DataTypes.DATE,
       approvedBy: {
         type: DataTypes.STRING,
         allowNull: false,

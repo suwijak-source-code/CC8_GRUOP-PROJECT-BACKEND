@@ -26,3 +26,16 @@ exports.protect = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.checkAdminRole = async (req, res, next) => {
+    try {
+        const { role } = req.user;
+        if (role === 'ADMIN') {
+            next();
+        } else {
+            res.status(403).json({ message: 'You are not allowed.' })
+        }
+    } catch (err) {
+        next(err);
+    }
+};
