@@ -5,8 +5,23 @@ const seedController = require("../controllers/seedController");
 
 router.get("/", seedController.getAllSeed);
 router.get("/:id", seedController.getSeedById);
-router.post("/", seedController.createSeed);
-router.post("/:id", seedController.editSeed);
-router.delete("/:id", seedController.deleteSeed);
+router.post(
+  "/",
+  checkController.protect,
+  checkController.checkAdminRole,
+  seedController.createSeed
+);
+router.post(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  seedController.editSeed
+);
+router.delete(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  seedController.deleteSeed
+);
 
 module.exports = router;

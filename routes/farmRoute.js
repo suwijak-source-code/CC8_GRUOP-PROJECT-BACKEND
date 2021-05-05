@@ -9,8 +9,23 @@ router.get(
   farmController.getAllFarms
 );
 router.get("/:id", farmController.getFarmById);
-router.post("/", farmController.createFarm);
-router.post("/:id", farmController.editFarm);
-router.delete("/:id", farmController.deleteFarm);
+router.post(
+  "/",
+  checkController.protect,
+  checkController.checkAdminRole,
+  farmController.createFarm
+);
+router.post(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  farmController.editFarm
+);
+router.delete(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  farmController.deleteFarm
+);
 
 module.exports = router;

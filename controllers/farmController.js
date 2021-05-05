@@ -19,7 +19,7 @@ exports.getFarmById = async (req, res, next) => {
 };
 exports.createFarm = async (req, res, next) => {
   try {
-    if (!req.user) req.user = {}; // for test without user, remove when merge
+    // if (!req.user) req.user = {}; // for test without user, remove when merge
     const { name, remark } = req.body;
     if (!name && !name.trim())
       return res.status(400).json({ message: "name is required" });
@@ -36,7 +36,7 @@ exports.createFarm = async (req, res, next) => {
 };
 exports.editFarm = async (req, res, next) => {
   try {
-    if (!req.user) req.user = {}; // for test without user, remove when merge
+    // if (!req.user) req.user = {}; // for test without user, remove when merge
     const { id } = req.params;
     const { name, remark } = req.body;
     if (!name && !name.trim())

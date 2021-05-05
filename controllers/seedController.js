@@ -19,7 +19,7 @@ exports.getSeedById = async (req, res, next) => {
 };
 exports.createSeed = async (req, res, next) => {
   try {
-    if (!req.user) req.user = {}; // for test without user, remove when merge
+    // if (!req.user) req.user = {}; // for test without user, remove when merge
     const { name, cost, remark } = req.body;
     if (!name && !name.trim())
       return res.status(400).json({ message: "name is required" });
@@ -40,7 +40,7 @@ exports.createSeed = async (req, res, next) => {
 };
 exports.editSeed = async (req, res, next) => {
   try {
-    if (!req.user) req.user = {}; // for test without user, remove when merge
+    // if (!req.user) req.user = {}; // for test without user, remove when merge
     const { id } = req.params;
     const { name, cost, remark } = req.body;
     if (!name && !name.trim())
