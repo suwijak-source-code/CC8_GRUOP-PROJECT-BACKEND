@@ -1,4 +1,4 @@
-const { Seed } = require("../models");
+const { Seed, Planting } = require("../models");
 
 exports.getAllSeed = async (req, res, next) => {
   try {
@@ -19,9 +19,7 @@ exports.getSeedById = async (req, res, next) => {
 };
 exports.createSeed = async (req, res, next) => {
   try {
-    // if (req.user.role !== "admin")
-    //   return res.status(401).json({ message: "You are unauthorized" });
-    if (!req.user) req.user = {}; // for test without user
+    if (!req.user) req.user = {}; // for test without user, remove when merge
     const { name, cost, remark } = req.body;
     if (!name && !name.trim())
       return res.status(400).json({ message: "name is required" });
@@ -42,9 +40,7 @@ exports.createSeed = async (req, res, next) => {
 };
 exports.editSeed = async (req, res, next) => {
   try {
-    // if (req.user.role !== "admin")
-    //   return res.status(401).json({ message: "You are unauthorized" });
-    if (!req.user) req.user = {}; // for test without user
+    if (!req.user) req.user = {}; // for test without user, remove when merge
     const { id } = req.params;
     const { name, cost, remark } = req.body;
     if (!name && !name.trim())
@@ -76,8 +72,6 @@ exports.editSeed = async (req, res, next) => {
 };
 exports.deleteSeed = async (req, res, next) => {
   try {
-    // if (req.user.role !== "admin")
-    //   return res.status(401).json({ message: "You are unauthorized" });
     const { id } = req.params;
     const hasSeedEverBeUsed = await Planting.findOne({
       where: { seedId: id },
