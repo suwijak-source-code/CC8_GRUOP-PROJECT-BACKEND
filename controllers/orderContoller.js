@@ -1,12 +1,31 @@
-const { Order, OrderItem, sequelize } = require("../models");
+const { Op } = require("sequelize");
+const {
+  Order,
+  OrderItem,
+  Product,
+  Customer,
+  CustomerAddress,
+  sequelize,
+} = require("../models");
 
 exports.getAll = async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       include: {
         model: OrderItem,
+        include: {
+          model: Product,
+        },
       },
+      order: [["id", "desc"]],
     });
+    // for (order of orders) {
+    //   order.total = order.OrderItems.reduce((acc, orderItem, index) => {
+    //     acc += orderItem.price * orderItem.quantity;
+    //     return acc;
+    //   }, 0);
+    // }
+    // console.log(orders[0].total);
     res.status(200).json({ orders });
   } catch (err) {
     next(err);
@@ -17,9 +36,21 @@ exports.getOrderById = async (req, res, next) => {
     const { id } = req.params;
     const order = await Order.findOne({
       where: { id },
-      include: {
-        model: OrderItem,
-      },
+      include: [
+        {
+          model: OrderItem,
+          include: {
+            model: Product,
+          },
+        },
+        {
+          model: Customer,
+          include: {
+            model: CustomerAddress,
+            where: { main: true },
+          },
+        },
+      ],
     });
     res.status(200).json({ order });
   } catch (err) {
@@ -60,7 +91,7 @@ exports.createOrder = async (req, res, next) => {
 exports.editOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { invNo, customerId, date, name, address, phone } = req.body;
+    const { invNo, customerId, date, name, address, phone, status } = req.body;
     const isInvNoExist = await Order.findOne({ where: { invNo } });
     console.log(isInvNoExist.id);
     if (isInvNoExist.id !== +id && isInvNoExist)
@@ -75,6 +106,7 @@ exports.editOrder = async (req, res, next) => {
         name,
         address,
         phone,
+        status,
       },
       { where: { id } }
     );

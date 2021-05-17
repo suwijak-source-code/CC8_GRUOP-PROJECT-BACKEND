@@ -5,6 +5,8 @@ const middleware = require("./middlewares/error");
 const { sequelize } = require("./models");
 const orderRoute = require("./routes/orderRoute");
 const orderItemRoute = require("./routes/orderItemRoute");
+const productRoute = require("./routes/productRoute");
+const customerRoute = require("./routes/customerRoute");
 
 const main = express();
 main.use(express.json());
@@ -14,6 +16,8 @@ main.use(cors());
 
 main.use("/order", orderRoute);
 main.use("/orderitem", orderItemRoute);
+main.use("/product", productRoute);
+main.use("/customer", customerRoute);
 
 main.use((req, res, next) => {
   res.status(404).json({
