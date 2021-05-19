@@ -1,4 +1,4 @@
-// const { User } = require('../models');
+const { User } = require('../models');
 const jwt = require('jsonwebtoken');
 
 exports.protect = async (req, res, next) => {
@@ -27,7 +27,33 @@ exports.protect = async (req, res, next) => {
 exports.checkAdminRole = async (req, res, next) => {
     try {
         const { role } = req.user;
-        if (role === 'ADMIN') {
+        if (role === 'admin') {
+            next();
+        } else {
+            res.status(403).json({ message: 'You are not allowed.' })
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.checkAdminRoGardenerRole = async (req, res, next) => {
+    try {
+        const { role } = req.user;
+        if (role === 'admin' || role === 'gardener') {
+            next();
+        } else {
+            res.status(403).json({ message: 'You are not allowed.' })
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.checkGardenerRole = async (req, res, next) => {
+    try {
+        const { role } = req.user;
+        if (role === 'gardener') {
             next();
         } else {
             res.status(403).json({ message: 'You are not allowed.' })
