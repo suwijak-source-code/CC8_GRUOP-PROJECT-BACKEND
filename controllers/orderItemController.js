@@ -10,6 +10,7 @@ exports.getAllOrderItem = async (req, res, next) => {
       productId = "",
     } = req.query;
     console.log(orderId);
+    console.log(+productId);
     // if (!orderId) orderId = "";
     // if (!productId) productId = "";
     const orderItems = await OrderItem.findAll({
@@ -23,6 +24,7 @@ exports.getAllOrderItem = async (req, res, next) => {
         model: Order,
         where: { date: { [Op.between]: [start, end] } },
       },
+      order: [["id", "desc"]],
     });
     // console.log(orderItems);
     res.status(200).json({ orderItems });
@@ -71,7 +73,7 @@ exports.editOrderItem = async (req, res, next) => {
     for ({ productId, quantity, price } of editOrderItems) {
       await OrderItem.update(
         { productId, quantity, price },
-        { where: { productId }, transaction: req.t }
+        { where: { productId, orderId: id }, transaction: req.t }
       );
     }
     for ({ productId, quantity, price } of createOrderItems) {
