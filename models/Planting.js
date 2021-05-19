@@ -3,17 +3,47 @@ module.exports = (sequelize, DataTypes) => {
     "Planting",
     {
       startDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      expectedHarvestDate: DataTypes.DATE,
+      plantedAmount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
+      harvestedAmount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
       status: {
         type: DataTypes.ENUM,
-        values: ["started", "harvested"],
+        values: ["started", "harvested", "finished", "cancel"],
       },
       remark: DataTypes.STRING,
-      inResponsibilityDate: DataTypes.DATE,
-      harvestDate: DataTypes.DATE,
+      harvestDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      assignStatus: {
+        type: DataTypes.ENUM,
+        values: ["assign", "notAssign"],
+      },
+      fertilizerPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0,
+        allowNull: false,
+      },
+      maintenanceCost: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0,
+        allowNull: false,
+      },
+      miscellaneousExpenses: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0,
+        allowNull: false,
+      }
     },
     {
       underscored: true,
@@ -44,34 +74,19 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
-    Planting.belongsTo(models.Planting, {
-      as: "ResponsibleUser",
+    Planting.belongsTo(models.User, {
+      as: "PlantingApproved",
       foreignKey: {
-        name: "responsibleUser",
+        name: "plantingApprovedBy",
+        allowNull: false,
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
-    Planting.belongsTo(models.Planting, {
-      as: "Supervisor",
+    Planting.belongsTo(models.User, {
+      as: "PlantingCanceler",
       foreignKey: {
-        name: "supervisor",
-      },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
-    });
-    Planting.belongsTo(models.Planting, {
-      as: "HarvestedBy",
-      foreignKey: {
-        name: "harvestedBy",
-      },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
-    });
-    Planting.belongsTo(models.Planting, {
-      as: "HarvestApprovedBy",
-      foreignKey: {
-        name: "harvestApprovedBy",
+        name: "canceler"
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
@@ -91,7 +106,14 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
+    Planting.hasMany(models.Job, {
+      foreignKey: {
+        name: "plantingId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
   };
-
   return Planting;
 };

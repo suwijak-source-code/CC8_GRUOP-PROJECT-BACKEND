@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
       },
       password: {
         type: DataTypes.STRING,
@@ -31,12 +32,13 @@ module.exports = (sequelize, DataTypes) => {
         values: ["male", "female"],
       },
       birthDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
       nationalId: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
       },
       email: {
         type: DataTypes.STRING,
@@ -51,10 +53,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       startDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      endDate: DataTypes.DATE,
+      endDate: DataTypes.DATEONLY,
       approvedBy: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -82,33 +84,53 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "RESTRICT",
     });
     User.hasMany(models.Planting, {
-      as: "ResponsibleUser",
+      as: "PlantingApproved",
       foreignKey: {
-        name: "responsibleUser",
+        name: "plantingApprovedBy",
+        allowNull: false,
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
     User.hasMany(models.Planting, {
-      as: "Supervisor",
+      as: "PlantingCanceler",
       foreignKey: {
-        name: "supervisor",
+        name: "canceler"
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
-    User.hasMany(models.Planting, {
-      as: "HarvestedBy",
+    User.hasMany(models.Job, {
+      as: "Staff",
       foreignKey: {
-        name: "harvestedBy",
+        name: "staffId",
+        allowNull: false,
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
     });
-    User.hasMany(models.Planting, {
-      as: "HarvestApprovedBy",
+    User.hasMany(models.Job, {
+      as: "Assignor",
       foreignKey: {
-        name: "harvestApprovedBy",
+        name: "assignor",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+    User.hasMany(models.Job, {
+      as: "Examiner",
+      foreignKey: {
+        name: "examiner",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+    User.hasMany(models.Job, {
+      as: "Canceler",
+      foreignKey: {
+        name: "canceler"
       },
       onDelete: "RESTRICT",
       onUpdate: "RESTRICT",
