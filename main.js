@@ -4,6 +4,10 @@ const express = require("express");
 const cors = require("cors");
 const middleware = require("./middlewares/error");
 const { sequelize } = require("./models");
+const orderRoute = require("./routes/orderRoute");
+const orderItemRoute = require("./routes/orderItemRoute");
+const productRoute = require("./routes/productRoute");
+const customerRoute = require("./routes/customerRoute");
 
 
 const userRoute = require("./routes/userRoute");
@@ -23,6 +27,10 @@ main.use('/farms', farmRoute);
 main.use('/seeds', seedRoute);
 main.use('/plantings', plantingRoute);
 main.use('/jobs', jobRoute);
+main.use("/order", orderRoute);
+main.use("/orderitem", orderItemRoute);
+main.use("/product", productRoute);
+main.use("/customer", customerRoute);
 
 main.use((req, res, next) => {
   res.status(404).json({
