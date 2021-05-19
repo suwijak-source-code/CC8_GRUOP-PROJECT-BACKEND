@@ -89,6 +89,7 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 exports.editOrder = async (req, res, next) => {
+  req.t = await sequelize.transaction();
   try {
     const { id } = req.params;
     const { invNo, customerId, date, name, address, phone, status } = req.body;
@@ -108,10 +109,12 @@ exports.editOrder = async (req, res, next) => {
         phone,
         status,
       },
-      { where: { id } }
+      { where: { id }, transaction: req.t }
     );
-    res.status(200).json({ order });
+    next();
+    // res.status(200).json({ order });
   } catch (err) {
+    await req.t.rollback();
     next(err);
   }
 };

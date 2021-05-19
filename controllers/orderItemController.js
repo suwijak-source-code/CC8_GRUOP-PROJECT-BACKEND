@@ -39,11 +39,6 @@ exports.getAllOrderItemByOrderId = async (req, res, next) => {
 exports.createOrderItem = async (req, res, next) => {
   try {
     const { orderItems } = req.body;
-    // const isProductExistInOrder = await Order.findOne({
-    //   where: { orderId, productId },
-    // });
-    // if (isProductExistInOrder)
-    //   return res.status(400).json({ message: "You have this product already" });
     for ({ productId, quantity, price } of orderItems) {
       const orderItem = await OrderItem.create(
         {
@@ -65,39 +60,36 @@ exports.createOrderItem = async (req, res, next) => {
     next(err);
   }
 };
-// exports.createOrderItem = async (req, res, next) => {
-//   try {
-//     const { orderId, productId, quantitie, price } = req.body;
-//     const isProductExistInOrder = await Order.findOne({
-//       where: { orderId, productId },
-//     });
-//     if (isProductExistInOrder)
-//       return res.status(400).json({ message: "You have this product already" });
-//     const orderItem = await Order.create({
-//       orderId,
-//       productId,
-//       quantity,
-//       price,
-//     });
-//     res.status(200).json({ orderItem });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
 exports.editOrderItem = async (req, res, next) => {
   try {
-    const { orderId, productId, quantity, price } = req.body;
-    const isProductExistInOrder = await Order.findOne({
-      where: { orderId, productId },
-    });
-    if (!isProductExistInOrder)
-      return res.status(400).json({ message: "Bad request" });
-    const orderItem = await OrderItem.update(
-      { orderId, productId, quantity, price },
-      { where: { orderId, productId } }
-    );
-    res.status(200).json({ orderItem });
+    const { id } = req.params;
+    const {
+      editOrderItems = [],
+      createOrderItems = [],
+      deleteOrderItems = [],
+    } = req.body;
+    for ({ productId, quantity, price } of editOrderItems) {
+      await OrderItem.update(
+        { productId, quantity, price },
+        { where: { productId }, transaction: req.t }
+      );
+    }
+    for ({ productId, quantity, price } of createOrderItems) {
+      await OrderItem.create(
+        { productId, quantity, price, orderId: id },
+        { transaction: req.t }
+      );
+    }
+    for ({ productId } of deleteOrderItems) {
+      await OrderItem.destroy({
+        where: { productId, orderId: id },
+        transaction: req.t,
+      });
+    }
+    await req.t.commit();
+    res.status(200).json({ message: "Invoice is edited" });
   } catch (err) {
+    await req.t.rollback();
     next(err);
   }
 };
