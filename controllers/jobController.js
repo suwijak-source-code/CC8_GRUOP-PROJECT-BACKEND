@@ -194,54 +194,6 @@ exports.getJobAssign = async (req, res, next) => {
     }
 };
 
-// exports.searchJob = async (req, res, next) => {
-//     try {
-//         const { search } = req.query;
-//         const job = await Job.findAll({
-//             where: { mission: search },
-//             include: [
-//                 {
-//                     model: User,
-//                     as: 'Staff',
-//                     attributes: ['id', 'firstName', 'lastName']
-//                 },
-//                 {
-//                     model: User,
-//                     as: 'Assignor',
-//                     attributes: ['id', 'firstName', 'lastName']
-//                 },
-//                 {
-//                     model: User,
-//                     as: 'Examiner',
-//                     attributes: ['id', 'firstName', 'lastName']
-//                 },
-//                 {
-//                     model: User,
-//                     as: 'Canceler',
-//                     attributes: ['id', 'firstName', 'lastName']
-//                 },
-//                 {
-//                     model: Planting,
-//                     include: [
-//                         {
-//                             model: Farm,
-//                             attributes: ['id', 'name']
-//                         },
-//                         {
-//                             model: Seed,
-//                             attributes: ['id', 'name']
-//                         },
-//                     ],
-//                     attributes: ['id', 'status']
-//                 },
-//             ]
-//         });
-//         res.status(200).json({ job });
-//     } catch (err) {
-//         next(err);
-//     }
-// }
-
 exports.createJob = async (req, res, next) => {
     const trans = await sequelize.transaction();
     try {
