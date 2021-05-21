@@ -57,7 +57,8 @@ exports.getPlanting = async (req, res, next) => {
                         as: "PlantingCanceler",
                         attributes: ['id', 'firstName', 'lastName']
                     }
-                ]
+                ],
+                order: [['startDate', 'DESC']]
             });
         } else {
             planting = await Planting.findAll({
@@ -85,7 +86,8 @@ exports.getPlanting = async (req, res, next) => {
                         as: "PlantingCanceler",
                         attributes: ['id', 'firstName', 'lastName']
                     }
-                ]
+                ],
+                order: [['startDate', 'DESC']]
             });
         }
         res.status(200).json({ planting });
