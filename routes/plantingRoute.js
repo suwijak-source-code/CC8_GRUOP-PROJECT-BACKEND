@@ -14,7 +14,7 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/by-id/:id",
   checkController.protect,
   checkController.checkAdminRole,
   plantingController.getPlantingById
@@ -50,17 +50,17 @@ router.post(
 );
 
 router.post(
-  "/:plantingId",
-  checkController.protect,
-  checkController.checkAdminRole,
-  plantingTransaction.createTransactionOnPlantingId
-);
-
-router.post(
   "/harvest/:plantingId",
   checkController.protect,
   checkController.checkAdminRole,
   plantingTransaction.harvest
+);
+
+router.post(
+  "/:plantingId",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingTransaction.createTransactionOnPlantingId
 );
 
 router.put(

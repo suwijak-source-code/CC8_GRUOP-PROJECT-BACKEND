@@ -289,6 +289,11 @@ exports.login = async (req, res, next) => {
       return res
         .status(400)
         .json({ message: "username and password incorrect" });
+    };
+    if (user.status === 'quited') {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed." });
     }
     const isPasswordMath = await bcrypt.compare(password, user.password);
     if (!isPasswordMath) {
