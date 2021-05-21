@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Order, OrderItem } = require("../models");
+const { Order, OrderItem, ProductMovement } = require("../models");
 
 exports.getAllOrderItem = async (req, res, next) => {
   try {
@@ -52,8 +52,17 @@ exports.createOrderItem = async (req, res, next) => {
         { transaction: req.t }
       );
       console.log(orderItem.id);
+      const movement = await ProductMovement.create(
+        {
+          type: "sales",
+          quantity: -quantity,
+          price,
+          orderItem: orderItem.id,
+          productId,
+        },
+        { transaction: req.t }
+      );
     }
-    // throw new Error();
     await req.t.commit();
     res.status(201).json({ order: req.order });
   } catch (err) {
@@ -71,18 +80,49 @@ exports.editOrderItem = async (req, res, next) => {
       deleteOrderItems = [],
     } = req.body;
     for ({ productId, quantity, price } of editOrderItems) {
+      const orderItem = await OrderItem.findOne({
+        where: { productId, orderId: id },
+      });
+      console.log(orderItem.id);
+      const movement = await ProductMovement.update(
+        {
+          type: "sales",
+          quantity: -quantity,
+          price,
+          orderItem: orderItem.id,
+          productId,
+        },
+        { where: { productId, orderItem: orderItem.id }, transaction: req.t }
+      );
       await OrderItem.update(
         { productId, quantity, price },
         { where: { productId, orderId: id }, transaction: req.t }
       );
     }
     for ({ productId, quantity, price } of createOrderItems) {
-      await OrderItem.create(
+      const orderItem = await OrderItem.create(
         { productId, quantity, price, orderId: id },
+        { transaction: req.t }
+      );
+      const movement = await ProductMovement.create(
+        {
+          type: "sales",
+          quantity: -quantity,
+          price,
+          orderItem: orderItem.id,
+          productId,
+        },
         { transaction: req.t }
       );
     }
     for ({ productId } of deleteOrderItems) {
+      const orderItem = await OrderItem.findOne({
+        where: { productId, orderId: id },
+      });
+      const movement = await ProductMovement.destroy({
+        where: { productId, OrderItem: orderItem.id },
+        transaction: req.t,
+      });
       await OrderItem.destroy({
         where: { productId, orderId: id },
         transaction: req.t,

@@ -1,8 +1,32 @@
-const { Product } = require("../models");
+const {
+  Product,
+  ProductMovement,
+  Planting,
+  OrderItem,
+  Farm,
+  Order,
+} = require("../models");
+const { Op } = require("sequelize");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const { orderId = "", productId = "" } = req.query;
+    const products = await Product.findAll({
+      where: { id: { [Op.like]: "%" + productId + "%" } },
+      include: {
+        model: ProductMovement,
+        include: [
+          { model: Planting, include: Farm },
+          {
+            model: OrderItem,
+            include: {
+              model: Order,
+              where: { id: { [Op.like]: "%" + orderId + "%" } },
+            },
+          },
+        ],
+      },
+    });
     res.status(200).json({ products });
   } catch (err) {
     next(err);
@@ -12,7 +36,16 @@ exports.getAllProduct = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await Product.findOne({ where: { id } });
+    const product = await Product.findOne({
+      where: { id },
+      include: {
+        model: ProductMovement,
+        include: [
+          { model: Planting, include: Farm },
+          { model: OrderItem, include: Order },
+        ],
+      },
+    });
     res.status(200).json({ product });
   } catch (err) {
     next(err);

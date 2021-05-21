@@ -9,7 +9,6 @@ const orderItemRoute = require("./routes/orderItemRoute");
 const productRoute = require("./routes/productRoute");
 const customerRoute = require("./routes/customerRoute");
 
-
 const userRoute = require("./routes/userRoute");
 const farmRoute = require("./routes/farmRoute");
 const seedRoute = require("./routes/seedRoute");
@@ -22,11 +21,11 @@ main.use(express.urlencoded({ extended: false }));
 
 main.use(cors());
 
-main.use('/users', userRoute);
-main.use('/farms', farmRoute);
-main.use('/seeds', seedRoute);
-main.use('/plantings', plantingRoute);
-main.use('/jobs', jobRoute);
+main.use("/users", userRoute);
+main.use("/farms", farmRoute);
+main.use("/seeds", seedRoute);
+main.use("/plantings", plantingRoute);
+main.use("/jobs", jobRoute);
 main.use("/order", orderRoute);
 main.use("/orderitem", orderItemRoute);
 main.use("/product", productRoute);
@@ -41,7 +40,7 @@ main.use((req, res, next) => {
 
 main.use(middleware);
 
-// sequelize.sync({ force: true }).then(() => console.log('DB sync'))
+// sequelize.sync({ force: true }).then(() => console.log("DB sync"));
 
 const port = process.env.PORT || 8000;
 main.listen(port, () =>

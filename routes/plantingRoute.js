@@ -2,27 +2,95 @@ const express = require("express");
 const checkController = require("../controllers/checkController");
 const plantingController = require("../controllers/plantingController");
 const farmController = require("../controllers/farmController");
-
+const plantingTransaction = require("../controllers/plantingTransactionController");
 
 const router = express.Router();
 
-router.get('/search', checkController.protect, checkController.checkAdminRole, plantingController.searchPlanting);
+router.get(
+  "/search",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.searchPlanting
+);
 
-router.get('/work-plan/:status', checkController.protect, checkController.checkAdminRole, plantingController.getWorkPlanting);
+router.get(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.getPlantingById
+);
 
-router.get('/:status', checkController.protect, checkController.checkAdminRole, plantingController.getPlanting);
+router.get(
+  "/work-plan/:status",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.getWorkPlanting
+);
 
-router.post('/', checkController.protect, checkController.checkAdminRole, plantingController.createPlanting,
-    farmController.updateStatus);
+router.get(
+  "/:status",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.getPlanting
+);
 
-router.put('/:id', checkController.protect, checkController.checkAdminRole, plantingController.editPlanting,
-    farmController.updateStatus);
+router.post(
+  "/",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.createPlanting,
+  farmController.updateStatus
+);
 
-router.patch('/cancel/:id', checkController.protect, checkController.checkAdminRole, plantingController.updateStatus,
-    farmController.updateStatus);
+router.post(
+  "/start",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.startPlanting
+);
 
-router.patch('/cancel-job/:id', checkController.protect, checkController.checkAdminRole, plantingController.updateDate);
+router.post(
+  "/:plantingId",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingTransaction.createTransactionOnPlantingId
+);
 
-router.patch('/update-harvest-amount/:id', checkController.protect, checkController.checkAdminRole, plantingController.updateHarvestedAmount);
+router.post(
+  "/harvest/:plantingId",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingTransaction.harvest
+);
+
+router.put(
+  "/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.editPlanting,
+  farmController.updateStatus
+);
+
+router.patch(
+  "/cancel/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.updateStatus,
+  farmController.updateStatus
+);
+
+router.patch(
+  "/cancel-job/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.updateDate
+);
+
+router.patch(
+  "/update-harvest-amount/:id",
+  checkController.protect,
+  checkController.checkAdminRole,
+  plantingController.updateHarvestedAmount
+);
 
 module.exports = router;
