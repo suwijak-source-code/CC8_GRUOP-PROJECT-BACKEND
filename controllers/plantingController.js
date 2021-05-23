@@ -20,7 +20,10 @@ cron.schedule("0 0 * * *", async function () {
           { harvestDate: currentTime },
           {
             status: {
-              [Op.ne]: ["cancel"],
+              [Op.and]: [
+                { [Op.ne]: ["cancel"] },
+                { [Op.ne]: ["finished"] }
+              ]
             },
           },
         ],
@@ -31,12 +34,12 @@ cron.schedule("0 0 * * *", async function () {
         await Planting.update(
           {
             status: "harvested",
-            assignStatus: "notAssign",
+            // assignStatus: "notAssign",
           },
           { where: { id: item.id } }
         )
     );
-    console.log("test schedule");
+    console.log("schedule")
   } catch (err) {
     next(err);
   }
@@ -740,7 +743,7 @@ exports.updateHarvestedAmount = async (req, res, next) => {
         { transaction: trans }
       );
       await trans.commit();
-      next();
+      res.status(200).json({ message: "Update status successfully" });
     } else {
       const { id } = req.params;
       if (harvestedAmount === undefined)
@@ -784,6 +787,12 @@ exports.updateStatus = async (req, res, next) => {
       const updateStatusFarm = await Planting.findOne(
         {
           where: { id: updateStatusPlanting.plantingId },
+          include: [
+            {
+              model: Seed,
+              attributes: ["id", "name"],
+            }
+          ]
         },
         { transaction: trans }
       );
