@@ -28,7 +28,7 @@ exports.sendInvoice = async (req, res, next) => {
 
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    res.status(200).json({ message: "invoice is sent" });
+    res.status(200).json({ message: "invoice sent" });
   } catch (err) {
     console.log(err);
   }

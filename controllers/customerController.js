@@ -14,6 +14,10 @@ exports.getAllCustomers = async (req, res, next) => {
         { model: CustomerAddress, where: { main: 1 } },
         { model: Order, include: OrderItem },
       ],
+      order: [
+        ["id", "asc"],
+        [Order, "id", "desc"],
+      ],
     });
     res.status(200).json({ customers });
   } catch (err) {
@@ -28,6 +32,10 @@ exports.getCustomerById = async (req, res, next) => {
       include: [
         { model: CustomerAddress },
         { model: Order, include: OrderItem },
+      ],
+      order: [
+        ["id", "asc"],
+        [Order, "id", "desc"],
       ],
     });
     res.status(200).json({ customer });

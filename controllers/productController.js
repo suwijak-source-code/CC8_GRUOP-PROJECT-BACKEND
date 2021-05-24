@@ -26,6 +26,10 @@ exports.getAllProduct = async (req, res, next) => {
           },
         ],
       },
+      order: [
+        ["id", "asc"],
+        [ProductMovement, "id", "desc"],
+      ],
     });
     res.status(200).json({ products });
   } catch (err) {
