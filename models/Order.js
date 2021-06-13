@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.ENUM,
-        values: ["waiting for payment", "completed", "cancelled"],
+        values: ["waiting for payment", "completed", "cancelled", "emailed"],
       },
       name: {
         type: DataTypes.STRING,
